@@ -31,7 +31,7 @@ RUN yum -y install condor \
 COPY worker.conf /etc/condor/config.d/
 COPY osgvo-node-advertise /usr/local/bin/
 COPY scitokens /usr/local/bin/
-COPY user-wrapper.sh /usr/libexec/condor/
+COPY user-job-wrapper.sh /usr/libexec/condor/
 
 
 # ssh stuff, sort this out later too!
