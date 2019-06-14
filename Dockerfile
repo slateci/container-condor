@@ -1,0 +1,54 @@
+FROM opensciencegrid/osg-wn:3.4-el7
+
+MAINTAINER Lincoln Bryant <lincolnb@uchicago.edu>
+
+# libXt needed for some application
+# tcsh needed for fsurf
+# ATLAS needs unzip, gcc at least.
+RUN yum -y install condor \ 
+                   openssh-clients \ 
+                   openssh-server \
+                   libXt \
+                   tcsh \
+                   gcc \
+                   libXpm \
+                   libXpm-devel \
+                   unzip && \
+    yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm && \
+    yum install HEP_OSlibs && \
+    yum clean all
+
+# GPU stuff, sort this out later!
+#RUN yum localinstall http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.2.148-1.x86_64.rpm -y
+#RUN yum install cuda-drivers-390.12 xorg-x11-drv-nvidia-390.12 xorg-x11-drv-nvidia-devel-390.12 xorg-x11-drv-nvidia-gl-390.12 xorg-x11-drv-nvidia-libs-390.12 nvidia-kmod-390.12  -y
+#RUN yum install cuda-9.1.85 -y
+#RUN ln -s /usr/local/cuda-9.0 /usr/local/cuda
+#RUN curl -OL http://us.download.nvidia.com/XFree86/Linux-x86_64/396.51/NVIDIA-Linux-x86_64-396.51.run
+#RUN chmod +x NVIDIA-Linux-x86_64-396.51.run; ./NVIDIA-Linux-x86_64-396.51.run -s
+#RUN yum install supervisor -y
+
+RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
+RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
+RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+
+# Configuration
+COPY worker.conf /etc/condor/config.d/
+COPY osgvo-node-advertise /usr/local/bin/
+COPY user-wrapper.sh /usr/libexec/condor/
+
+
+# ssh stuff, sort this out later too!
+#RUN yum install supervisor -y
+#COPY supervisord.conf /etc/
+#COPY sshd_config /etc/ssh/
+#RUN adduser osg
+#RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
+#RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
+#RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+#RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
+#RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
+#RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+
+# We may mount /var/lib/docker from the host, so we chown that
+ENTRYPOINT chown -R condor: /var/lib/condor && \
+           /usr/bin/supervisord -c /etc/supervisord.conf
