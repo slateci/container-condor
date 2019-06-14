@@ -14,8 +14,8 @@ RUN yum -y install condor \
                    libXpm \
                    libXpm-devel \
                    unzip && \
-    yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm && \
-    yum install HEP_OSlibs && \
+    yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm -y && \
+    yum install HEP_OSlibs -y && \
     yum clean all
 
 # GPU stuff, sort this out later!
@@ -26,10 +26,6 @@ RUN yum -y install condor \
 #RUN curl -OL http://us.download.nvidia.com/XFree86/Linux-x86_64/396.51/NVIDIA-Linux-x86_64-396.51.run
 #RUN chmod +x NVIDIA-Linux-x86_64-396.51.run; ./NVIDIA-Linux-x86_64-396.51.run -s
 #RUN yum install supervisor -y
-
-RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
-RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
-RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
 
 # Configuration
 COPY worker.conf /etc/condor/config.d/
