@@ -13,6 +13,7 @@ RUN yum -y install condor \
                    gcc \
                    libXpm \
                    libXpm-devel \
+                   supervisor \
                    unzip && \
     yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm && \
     yum install HEP_OSlibs && \
@@ -25,7 +26,6 @@ RUN yum -y install condor \
 #RUN ln -s /usr/local/cuda-9.0 /usr/local/cuda
 #RUN curl -OL http://us.download.nvidia.com/XFree86/Linux-x86_64/396.51/NVIDIA-Linux-x86_64-396.51.run
 #RUN chmod +x NVIDIA-Linux-x86_64-396.51.run; ./NVIDIA-Linux-x86_64-396.51.run -s
-#RUN yum install supervisor -y
 
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
@@ -35,6 +35,7 @@ RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
 COPY worker.conf /etc/condor/config.d/
 COPY osgvo-node-advertise /usr/local/bin/
 COPY user-wrapper.sh /usr/libexec/condor/
+COPY supervisord.conf /etc/supervisord.conf
 
 
 # ssh stuff, sort this out later too!
