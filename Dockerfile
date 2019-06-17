@@ -6,7 +6,6 @@ LABEL maintainer="Lincoln Bryant <lincolnb@uchicago.edu>"
 RUN sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/osg.repo
 RUN echo -e "[osg-upcoming]\nname=OSG Software for Enterprise Linux 7 - Upcoming - x86_64\nmirrorlist=https://repo.opensciencegrid.org/mirror/osg/upcoming/el7/release/x86_64\nfailovermethod=priority\npriority=97\nenabled=1\ngpgcheck=1\ngpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-OSG" > /etc/yum.repos.d/osg-upcoming.repo
 
-
 # libXt needed for some application
 # tcsh needed for fsurf
 # ATLAS needs unzip, gcc at least.
@@ -23,6 +22,8 @@ RUN yum -y install condor \
     yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm -y && \
     yum install HEP_OSlibs -y && \
     yum clean all
+    
+RUN mkdir -p /var/lib/condor/credentials
 
 # GPU stuff, sort this out later!
 #RUN yum localinstall http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.2.148-1.x86_64.rpm -y
@@ -36,7 +37,6 @@ RUN yum -y install condor \
 COPY worker.conf /etc/condor/config.d/
 COPY osgvo-node-advertise /usr/local/bin/
 COPY supervisord.conf /etc/supervisord.conf
-COPY scitokens /usr/local/bin/
 COPY user-job-wrapper.sh /usr/libexec/condor/
 
 # ssh stuff, sort this out later too!
