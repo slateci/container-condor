@@ -1,6 +1,11 @@
 FROM opensciencegrid/osg-wn:3.4-devel-el7
 
-MAINTAINER Lincoln Bryant <lincolnb@uchicago.edu>
+LABEL maintainer="Lincoln Bryant <lincolnb@uchicago.edu>"
+
+# Temporary hack until OSG 3.5 releases, for Scitokens support
+RUN sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/osg.repo
+RUN echo -e "[osg-upcoming]\nname=OSG Software for Enterprise Linux 7 - Upcoming - x86_64\nmirrorlist=https://repo.opensciencegrid.org/mirror/osg/upcoming/el7/release/x86_64\nfailovermethod=priority\npriority=97\nenabled=1\ngpgcheck=1\ngpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-OSG" > /etc/yum.repos.d/osg-upcoming.repo
+
 
 # libXt needed for some application
 # tcsh needed for fsurf
