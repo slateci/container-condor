@@ -22,8 +22,12 @@ RUN yum -y install condor \
     yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm -y && \
     yum install HEP_OSlibs -y && \
     yum clean all
+   
     
 RUN mkdir -p /var/lib/condor/credentials
+
+# some extra bits for ATLAS
+RUN mkdir -p /scratch && mkdir -p /home/usatlas{1..4} && chmod 777 /scratch && chmod 777 /home/usatlas{1..4}
 
 # GPU stuff, sort this out later!
 #RUN yum localinstall http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.2.148-1.x86_64.rpm -y
