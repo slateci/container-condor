@@ -6,6 +6,12 @@ LABEL maintainer="Lincoln Bryant <lincolnb@uchicago.edu>"
 RUN sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/osg.repo
 RUN echo -e "[osg-upcoming]\nname=OSG Software for Enterprise Linux 7 - Upcoming - x86_64\nmirrorlist=https://repo.opensciencegrid.org/mirror/osg/upcoming/el7/release/x86_64\nfailovermethod=priority\npriority=97\nenabled=1\ngpgcheck=1\ngpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-OSG" > /etc/yum.repos.d/osg-upcoming.repo
 
+# another hack- we need to remove singularity and replace it with Igor's script
+# that wraps around the singularity binary from CVMFS and removes the --pid
+# option
+RUN yum remove -y singularity
+ADD singularity_npid.sh /usr/bin/singularity
+
 # libXt needed for some application
 # tcsh needed for fsurf
 # ATLAS needs unzip, gcc at least.
