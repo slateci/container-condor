@@ -48,8 +48,8 @@ COPY worker.conf /etc/condor/config.d/
 COPY supervisord.conf /etc/supervisord.conf
 
 # Lets just get these from OSG at build time
-RUN curl -s https://raw.githubusercontent.com/opensciencegrid/osg-flock/master/job-wrappers/user-job-wrapper.sh > /usr/local/bin/osgvo-node-advertise
-RUN curl -s https://raw.githubusercontent.com/opensciencegrid/osg-flock/master/node-check/osgvo-node-advertise  > /usr/libexec/condor/user-job-wrapper.sh
+RUN curl -s https://raw.githubusercontent.com/opensciencegrid/osg-flock/master/job-wrappers/user-job-wrapper.sh > /usr/libexec/condor/user-job-wrapper.sh
+RUN curl -s https://raw.githubusercontent.com/opensciencegrid/osg-flock/master/node-check/osgvo-node-advertise  > /usr/local/bin/osgvo-node-advertise
 RUN chmod +x /usr/local/bin/osgvo-node-advertise
 RUN chmod +x /usr/libexec/condor/user-job-wrapper.sh
 
