@@ -45,21 +45,14 @@ RUN mkdir -p /scratch && mkdir -p /home/usatlas/usatlas{1..4} && chmod 777 /scra
 
 # Configuration
 COPY worker.conf /etc/condor/config.d/
-COPY osgvo-node-advertise /usr/local/bin/
 COPY supervisord.conf /etc/supervisord.conf
-COPY user-job-wrapper.sh /usr/libexec/condor/
 
-# ssh stuff, sort this out later too!
-#RUN yum install supervisor -y
-#COPY supervisord.conf /etc/
-#COPY sshd_config /etc/ssh/
-#RUN adduser osg
-#RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
-#RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
-#RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
-#RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
-#RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
-#RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+# Lets just get these from OSG at build time
+RUN curl -s https://raw.githubusercontent.com/opensciencegrid/osg-flock/master/job-wrappers/user-job-wrapper.sh > /usr/local/bin/osgvo-node-advertise
+RUN curl -s https://raw.githubusercontent.com/opensciencegrid/osg-flock/master/node-check/osgvo-node-advertise  > /usr/libexec/condor/user-job-wrapper.sh
+RUN chmod +x /usr/local/bin/osgvo-node-advertise
+RUN chmod +x /usr/libexec/condor/user-job-wrapper.sh
+
 
 ### Temporary hack for making the glidein scripts work
 RUN chmod 777 /var/log/condor
