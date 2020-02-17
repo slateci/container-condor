@@ -61,6 +61,9 @@ COPY user-job-wrapper.sh /usr/libexec/condor/
 #RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
 #RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
 
+### Temporary hack for making the glidein scripts work
+RUN chmod 777 /var/log/condor
+
 # We may mount /var/lib/docker from the host, so we chown that
 ENTRYPOINT chown -R condor: /var/lib/condor && \
            /usr/bin/supervisord -c /etc/supervisord.conf
